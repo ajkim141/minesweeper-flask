@@ -1,0 +1,18 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+flask=0.10.1=py27_1
+ipython=2.2.0=py27_0
+itsdangerous=0.24=py27_0
+jinja2=2.7.3=py27_1
+markupsafe=0.18=py27_0
+openssl=1.0.1h=0
+pip=1.5.6=py27_0
+python=2.7.8=1
+readline=6.2=2
+setuptools=5.7=py27_0
+sqlite=3.8.4.1=0
+system=5.8=1
+tk=8.5.15=0
+werkzeug=0.9.6=py27_1
+zlib=1.2.7=0
