@@ -3,6 +3,7 @@
 {% block body %}
 <h1>New Game</h1>
 <form action="" method="post" name="new_game_form">
+    {{form.hidden_tag()}}
     <p>
         Number of Rows:<br>
         {{form.rows(size=5)}}<br>

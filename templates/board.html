@@ -1,14 +1,43 @@
 {% extends "index.html" %}
 
+{%- macro render_tile(row_num, col_num, tile) %}
+
+        {% if tile[0] %}
+            {% if tile[1] %}
+                <td class="board-element unmasked-mine">X</td>
+            {% elif tile[2] %}
+                <td class="board-element unmasked-adjacent-{{ tile[2] }}">{{ tile[2] }}</td>
+            {% else %}
+                <td class="board-element unmasked-blank"></td>
+            {% endif %}
+        {% else %}
+            <td class="board-element">
+                <a class="masked-tile" href="{{ url_for('select_space', row=row_num, col=col_num) }}">?</a>
+            </td>
+        {% endif %}
+
+{%- endmacro %}
 
 
+{%- macro begat_board(game_board) %}
+    <table class="board-table">
+    {% for row in game_board %}
+        {% set row_num = loop.index0 %}
+        <tr class="board-row">
+        {% for tile in row %}
+            {% set col_num = loop.index0 %}
+            {{ render_tile(row_num, col_num, tile) }}
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+{%- endmacro %}
 
-{% block gameboard %}
+
+{% block gameboard_body %}
 
 <div class="board-container">
-    <div class="board-container">
-       <a href="#/Action5" class="button">Action5</a>
-    </div>
+   {{ begat_board(game_board) }}
 </div>
 
 {% endblock %}
