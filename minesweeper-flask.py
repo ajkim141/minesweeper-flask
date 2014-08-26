@@ -36,6 +36,23 @@ def new_game():
     return render_template('new_game.html', form=form)
 
 
+# attempting a restart page after losing
+# @app.route('/new_game_plus', methods=['GET', 'POST'])
+# def new_game():
+#     form = NewGameForm()
+#     if form.validate_on_submit():
+#         rows = form.rows.data
+#         columns = form.columns.data
+#         mines = form.mines.data
+#         if mines < rows * columns:
+#             global game_board
+#             game_board = ms.create_game_board(rows, columns, mines=mines)
+#             global game_on
+#             game_on = True
+#             return redirect(url_for('render_board'))
+#
+#     return render_template('new_game.html', form=form)
+
 @app.route('/board')
 def render_board():
     if not game_on:

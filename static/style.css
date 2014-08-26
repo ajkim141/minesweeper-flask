@@ -16,3 +16,14 @@
     text-decoration: none;
     border-radius: 2px;
 }
+
+/* I think these may have broken something on the game board. The new game div isn't doing anything */
+
+div.board-table {
+    width: 50%;
+}
+
+div.new_game_page {
+    width: 50%;
+    margin: 0 auto;
+}
