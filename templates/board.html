@@ -20,6 +20,7 @@
 
 
 {%- macro begat_board(game_board) %}
+<div class="board-container">
     <table class="board-table">
     {% for row in game_board %}
         {% set row_num = loop.index0 %}
@@ -31,14 +32,13 @@
         </tr>
     {% endfor %}
     </table>
+</div>
 {%- endmacro %}
 
 
 {% block gameboard_body %}
 
-<div class="board-container">
    {{ begat_board(game_board) }}
-</div>
 
 {% endblock %}
 

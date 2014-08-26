@@ -17,13 +17,14 @@
     border-radius: 2px;
 }
 
-/* I think these may have broken something on the game board. The new game div isn't doing anything */
-
-div.board-table {
+div.board-container {
+    text-align: center;
     width: 50%;
+    margin: 0 auto;
 }
 
-div.new_game_page {
+div.centered-page {
+    text-align: center;
     width: 50%;
     margin: 0 auto;
 }

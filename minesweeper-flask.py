@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, g
-from forms import NewGameForm
+from forms import NewGameForm, GameOverForm
 import minesweeper as ms
 
 app = Flask(__name__)
@@ -37,21 +37,21 @@ def new_game():
 
 
 # attempting a restart page after losing
-# @app.route('/new_game_plus', methods=['GET', 'POST'])
-# def new_game():
-#     form = NewGameForm()
-#     if form.validate_on_submit():
-#         rows = form.rows.data
-#         columns = form.columns.data
-#         mines = form.mines.data
-#         if mines < rows * columns:
-#             global game_board
-#             game_board = ms.create_game_board(rows, columns, mines=mines)
-#             global game_on
-#             game_on = True
-#             return redirect(url_for('render_board'))
-#
-#     return render_template('new_game.html', form=form)
+@app.route('/game_over', methods=['GET', 'POST'])
+def game_over():
+    form = GameOverForm()
+    if form.validate_on_submit():
+        rows = form.rows.data
+        columns = form.columns.data
+        mines = form.mines.data
+        if mines < rows * columns:
+            global game_board
+            game_board = ms.create_game_board(rows, columns, mines=mines)
+            global game_on
+            game_on = True
+            return redirect(url_for('render_board'))
+
+    return render_template('game_over.html', form=form)
 
 @app.route('/board')
 def render_board():
@@ -71,9 +71,9 @@ def select_space(row, col):
         if game_on:
             return redirect(url_for('render_board'))
         else:
-            return redirect(url_for('new_game'))
+            return redirect(url_for('game_over'))
     else:
-        return redirect(url_for('new_game'))
+        return redirect(url_for('game_over'))
 
 
 if __name__ == '__main__':
