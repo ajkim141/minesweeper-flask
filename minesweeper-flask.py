@@ -61,13 +61,11 @@ def select_space(row, col):
             #Valid entry
             game_on, game_board = ms.update_board(game_board, row, col)
         if ms.check_victory(game_board):
-            # add in a similar flashed message for if you win
-            pass
+            flash(u"You Win! Play Again?")
         elif game_on:
             return redirect(url_for('render_board'))
         else:
-            # remove this pass and replace it with something that will use the flashed messages system
-            pass
+            flash(u"You Lose! Play Again?")
     return redirect(url_for('new_game'))
 
 

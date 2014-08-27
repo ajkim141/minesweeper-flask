@@ -17,9 +17,8 @@
     border-radius: 2px;
 }
 
-div.board-container {
+div.board-table {
     text-align: center;
-    width: 50%;
     margin: 0 auto;
 }
 
