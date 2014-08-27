@@ -8,9 +8,3 @@ class NewGameForm(Form):
     rows = IntegerField('rows', [validators.NumberRange(min=5, max=50), validators.DataRequired()])
     columns = IntegerField('columns', [validators.NumberRange(min=5, max=50), validators.DataRequired()])
     mines = IntegerField('mines', [validators.NumberRange(min=5, max=99), validators.DataRequired()])
-
-
-class GameOverForm(Form):
-    rows = IntegerField('rows', [validators.NumberRange(min=5, max=50), validators.DataRequired()])
-    columns = IntegerField('columns', [validators.NumberRange(min=5, max=50), validators.DataRequired()])
-    mines = IntegerField('mines', [validators.NumberRange(min=5, max=99), validators.DataRequired()])

@@ -5,7 +5,6 @@ import sys as _sys
 
 
 def render_board(game_board):
-    # let's try to aim for something more like this:
     # 0 1 2 3 4 5 6
     # +-------------+
     # 0|O O O O O O O|
@@ -28,7 +27,7 @@ def render_board(game_board):
     print "".join(boarder_row)
 
     for rn, row in enumerate(game_board):
-        # let's make a list of the row's elements, along with it's boarders, to then join & print
+        # let's make a list of the row's elements, along with its borders, to then join & print
         row_value = str(rn) + "|" + " ".join([render_tile(tile) for tile in row]) + "|"
         print row_value
 
@@ -210,7 +209,7 @@ def update_board(game_board, row, col):
         game_on = True
 
         if tile[2] == 0:
-            #hit a blank space, unmask all the adjacent parts recursively
+            # hit a blank space, unmask all the adjacent parts recursively
             game_board = pathfind(game_board, row, col)
 
     return game_on, game_board
@@ -240,12 +239,12 @@ def pathfind(game_board, row, col):
         tile[0] = True
 
         if tile[2] == 0:
-            #this is a blank tile, so we need to check it's neighbors as well
-            #the generated list is only new elements from searching at this location
+            # this is a blank tile, so we need to check its neighbors as well
+            # the generated list is only new elements from searching at this location
             new_todo = [n for n in get_neighbors(game_board, row, col, is_mine=False, is_visible=False)
                         if n[0] not in hist_coords]
 
-            #update the trackers with the new locations
+            # update the trackers with the new locations
             hist_coords.update([coords for coords, _ in new_todo])
             todo += new_todo
 

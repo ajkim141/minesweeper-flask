@@ -2,27 +2,27 @@
 
 {% block bodytitle %}
 <div class="centered-page page-title">
-    <h1>New Game</h1>
+    <h1>Minesweeper</h1>
 </div>
 {% endblock %}
 
 {% block body %}
 <div class="centered-page">
-<form action="" method="post" name="new_game_form">
-    {{form.hidden_tag()}}
-    <p>
-        Number of Rows:<br>
-        {{form.rows(size=5)}}<br>
-    </p>
-    <p>
-        Number of Columns:<br>
-        {{form.columns(size=5)}}<br>
-    </p>
-    <p>
-        Number of Mines:<br>
-        {{form.mines(size=5)}}<br>
-    </p>
-    <p><input type="submit" value="Start New Game"></p>
-</form>
+    <form action="" method="post" name="new_game_form">
+        {{form.hidden_tag()}}
+        <p>
+            Number of Rows:<br>
+            {{form.rows(size=5)}}<br>
+        </p>
+        <p>
+            Number of Columns:<br>
+            {{form.columns(size=5)}}<br>
+        </p>
+        <p>
+            Number of Mines:<br>
+            {{form.mines(size=5)}}<br>
+        </p>
+        <p><input type="submit" value="Start New Game"></p>
+    </form>
 </div>
 {% endblock %}

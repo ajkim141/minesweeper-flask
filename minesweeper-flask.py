@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, g, flash
-from forms import NewGameForm, GameOverForm
+from forms import NewGameForm
 import minesweeper as ms
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ game_on = False
 
 @app.route('/')
 def start_page():
-    # return "Hello World!"
+    flash(u"Start A New Game?")
     return redirect('/new_game')
 
 
@@ -58,14 +58,18 @@ def select_space(row, col):
 
     if game_on:
         if 0 <= row <= len(game_board) and 0 <= col <= len(game_board[0]):
-            #Valid entry
+            # Valid entry
             game_on, game_board = ms.update_board(game_board, row, col)
+        # Win state
         if ms.check_victory(game_board):
             flash(u"You Win! Play Again?")
+        # Continue state
         elif game_on:
             return redirect(url_for('render_board'))
+        # Lose state
         else:
             flash(u"You Lose! Play Again?")
+    # Return to the new game page on win or lose
     return redirect(url_for('new_game'))
 
 
