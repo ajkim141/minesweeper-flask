@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, g
+from flask import Flask, render_template, request, redirect, url_for, g, flash
 from forms import NewGameForm, GameOverForm
 import minesweeper as ms
 
@@ -32,26 +32,18 @@ def new_game():
             global game_on
             game_on = True
             return redirect(url_for('render_board'))
+        else:
+            flash(u"You can't have more mines than spaces!")
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(u"Error in the %s field - %s" % (
+                    getattr(form, field).label.text,
+                    error
+                ))
 
     return render_template('new_game.html', form=form)
 
-
-# attempting a restart page after losing
-@app.route('/game_over', methods=['GET', 'POST'])
-def game_over():
-    form = GameOverForm()
-    if form.validate_on_submit():
-        rows = form.rows.data
-        columns = form.columns.data
-        mines = form.mines.data
-        if mines < rows * columns:
-            global game_board
-            game_board = ms.create_game_board(rows, columns, mines=mines)
-            global game_on
-            game_on = True
-            return redirect(url_for('render_board'))
-
-    return render_template('game_over.html', form=form)
 
 @app.route('/board')
 def render_board():
@@ -68,12 +60,16 @@ def select_space(row, col):
         if 0 <= row <= len(game_board) and 0 <= col <= len(game_board[0]):
             #Valid entry
             game_on, game_board = ms.update_board(game_board, row, col)
-        if game_on:
+        if ms.check_victory(game_board):
+            # add in a similar flashed message for if you win
+            pass
+        elif game_on:
             return redirect(url_for('render_board'))
         else:
-            return redirect(url_for('game_over'))
-    else:
-        return redirect(url_for('game_over'))
+            # remove this pass and replace it with something that will use the flashed messages system
+            pass
+    return redirect(url_for('new_game'))
+
 
 
 if __name__ == '__main__':
