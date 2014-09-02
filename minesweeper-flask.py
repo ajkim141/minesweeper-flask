@@ -1,16 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, g, flash
+from flask import Flask, render_template, request, redirect, url_for, g, flash, session, escape
 from forms import NewGameForm
 import minesweeper as ms
+import os
 
 app = Flask(__name__)
 app.debug = True
 app.config.from_object('config')
+app.secret_key = os.urandom(24)
 
-# global game board -- one player only
-global game_board
-game_board = None
-global game_on
-game_on = False
+# attempting session game board
+session['game_board'] = None
+session['game_on'] = False
 
 
 @app.route('/')
@@ -27,10 +27,8 @@ def new_game():
         columns = form.columns.data
         mines = form.mines.data
         if mines < rows * columns:
-            global game_board
-            game_board = ms.create_game_board(rows, columns, mines=mines)
-            global game_on
-            game_on = True
+            session['game_board'] = ms.create_game_board(rows, columns, mines=mines)
+            session['game_on'] = True
             return redirect(url_for('render_board'))
         else:
             flash(u"You can't have more mines than spaces!")
@@ -47,29 +45,30 @@ def new_game():
 
 @app.route('/board')
 def render_board():
-    if not game_on:
+    if not session['game_on']:
         redirect(url_for('new_game'))
-    return render_template("board.html", game_board=game_board)
+    return render_template("board.html", game_board=session['game_board'])
 
 @app.route('/select_space/<int:row>/<int:col>')
 def select_space(row, col):
-    global game_board
-    global game_on
+    session['game_board']
+    session['game_on']
 
-    if game_on:
-        if 0 <= row <= len(game_board) and 0 <= col <= len(game_board[0]):
+    if session['game_on']:
+        if 0 <= row <= len(session['game_board']) and 0 <= col <= len(session['game_board'][0]):
             # Valid entry
-            game_on, game_board = ms.update_board(game_board, row, col)
+            game_on, game_board = ms.update_board(session['game_board'], row, col)
         # Win state
-        if ms.check_victory(game_board):
+        if ms.check_victory(session['game_board']):
             flash(u"You Win! Play Again?")
         # Continue state
-        elif game_on:
+        elif session['game_on']:
             return redirect(url_for('render_board'))
         # Lose state
         else:
             flash(u"You Lose! Play Again?")
     # Return to the new game page on win or lose
+    session.pop('game_board', 'game_on', None)
     return redirect(url_for('new_game'))
 
 
