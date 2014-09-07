@@ -1,23 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, g, flash, session, escape
 from forms import NewGameForm
 import minesweeper as ms
+from sessions import ItsdangerousSessionInterface
 import os
 
 app = Flask(__name__)
-app.debug = True
 app.config.from_object('config')
-app.secret_key = os.urandom(24)
 
-# attempting session game board
-session['game_board'] = None
-session['game_on'] = False
+app.session_interface = ItsdangerousSessionInterface()
+
+def check_session_status():
+    if session:
+        if not 'game_on' in session or not 'game_board' in session:
+            return redirect('/new_game')
+    else:
+        return redirect('/new_game')
 
 
 @app.route('/')
 def start_page():
     flash(u"Start A New Game?")
     return redirect('/new_game')
-
 
 @app.route('/new_game', methods=['GET', 'POST'])
 def new_game():
@@ -42,34 +45,51 @@ def new_game():
 
     return render_template('new_game.html', form=form)
 
-
 @app.route('/board')
 def render_board():
+    if session:
+        if not 'game_on' in session or not 'game_board' in session:
+            return redirect('/new_game')
+    else:
+        return redirect('/new_game')
+
     if not session['game_on']:
         redirect(url_for('new_game'))
     return render_template("board.html", game_board=session['game_board'])
 
 @app.route('/select_space/<int:row>/<int:col>')
 def select_space(row, col):
-    session['game_board']
-    session['game_on']
+    if session:
+        if not 'game_on' in session or not 'game_board' in session:
+            return redirect('/new_game')
+    else:
+        return redirect('/new_game')
 
-    if session['game_on']:
-        if 0 <= row <= len(session['game_board']) and 0 <= col <= len(session['game_board'][0]):
+    game_board = session['game_board']
+    game_on = session['game_on']
+
+    if game_on:
+        if 0 <= row <= len(game_board) and 0 <= col <= len(game_board[0]):
             # Valid entry
-            game_on, game_board = ms.update_board(session['game_board'], row, col)
+            game_on, game_board = ms.update_board(game_board, row, col)
+
         # Win state
-        if ms.check_victory(session['game_board']):
+        if ms.check_victory(game_board):
             flash(u"You Win! Play Again?")
-        # Continue state
-        elif session['game_on']:
-            return redirect(url_for('render_board'))
+            game_on = False
         # Lose state
-        else:
+        elif not game_on:
+            game_on = False
             flash(u"You Lose! Play Again?")
     # Return to the new game page on win or lose
-    session.pop('game_board', 'game_on', None)
-    return redirect(url_for('new_game'))
+    session['game_on'] = game_on
+    session['game_board'] = game_board
+    if game_on:
+        # Continue state
+        return redirect(url_for('render_board'))
+    else:
+        # win or lost
+        return redirect(url_for('new_game'))
 
 
 
